@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2021-03-25T15:38:35.049Z" agent="5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36" etag="TOfQ_p8-NBDQWc5MdNHI" version="14.5.1" type="github" pages="2">
+<mxfile host="app.diagrams.net" modified="2021-03-29T15:28:18.203Z" agent="5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36" etag="wFQxPH-_ctwHY5Kqi7Lt" version="14.5.3" type="github" pages="2">
   <diagram id="yAWVV9cvAhEcRnJt0DdH" name="Cas_d_utilisations">
     <mxGraphModel dx="2062" dy="1122" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -152,7 +152,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="KkLvxfOQ_3_Sbgj7wKhj" name="diagramme_de_classes">
-    <mxGraphModel dx="1718" dy="935" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="2062" dy="1122" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="tRqBK_AUlnNpLzyV8w54-0" />
         <mxCell id="tRqBK_AUlnNpLzyV8w54-1" parent="tRqBK_AUlnNpLzyV8w54-0" />
@@ -234,11 +234,11 @@
         <mxCell id="53arx0t99b-nOGU999e7-0" value="*" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="tRqBK_AUlnNpLzyV8w54-1" vertex="1">
           <mxGeometry x="190" y="513" width="40" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="53arx0t99b-nOGU999e7-13" value="contactList" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="tRqBK_AUlnNpLzyV8w54-1" vertex="1">
-          <mxGeometry x="170" y="430" width="40" height="20" as="geometry" />
+        <mxCell id="53arx0t99b-nOGU999e7-13" value="is a contact" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="tRqBK_AUlnNpLzyV8w54-1" vertex="1">
+          <mxGeometry x="170" y="380" width="40" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="53arx0t99b-nOGU999e7-14" value="identity" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="tRqBK_AUlnNpLzyV8w54-1" vertex="1">
-          <mxGeometry x="300" y="430" width="40" height="20" as="geometry" />
+        <mxCell id="53arx0t99b-nOGU999e7-14" value="is relation owner" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="tRqBK_AUlnNpLzyV8w54-1" vertex="1">
+          <mxGeometry x="300" y="376" width="40" height="20" as="geometry" />
         </mxCell>
         <mxCell id="53arx0t99b-nOGU999e7-15" value="" style="endArrow=none;html=1;rounded=0;exitX=0.746;exitY=1.026;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.705;entryY=0.003;entryDx=0;entryDy=0;entryPerimeter=0;" parent="tRqBK_AUlnNpLzyV8w54-1" source="iWeoHumM6AAYFUOoGaLV-3" target="WYCISd5J7pwTWzu9YoAY-0" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
