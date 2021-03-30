@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2021-03-30T13:21:18.619Z" agent="5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36" etag="QPTA0rJa9pz6ehwqFl9x" version="14.5.3" type="github" pages="2">
+<mxfile host="app.diagrams.net" modified="2021-03-30T13:22:33.695Z" agent="5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36" etag="Vjiln6ZH1ENbW932ef4h" version="14.5.3" type="github" pages="2">
   <diagram id="yAWVV9cvAhEcRnJt0DdH" name="Cas_d_utilisations">
     <mxGraphModel dx="2062" dy="1122" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -181,16 +181,19 @@
           <mxGeometry y="182" width="140" height="26" as="geometry" />
         </mxCell>
         <mxCell id="co22RX8zbaftUHRl8hui-0" value="BankAccount" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;" parent="tRqBK_AUlnNpLzyV8w54-1" vertex="1">
-          <mxGeometry x="620" y="122" width="140" height="104" as="geometry" />
+          <mxGeometry x="620" y="122" width="140" height="130" as="geometry" />
         </mxCell>
         <mxCell id="co22RX8zbaftUHRl8hui-1" value="+ id: Integer" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="co22RX8zbaftUHRl8hui-0" vertex="1">
           <mxGeometry y="26" width="140" height="26" as="geometry" />
         </mxCell>
-        <mxCell id="co22RX8zbaftUHRl8hui-3" value="+ name : String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="co22RX8zbaftUHRl8hui-0" vertex="1">
+        <mxCell id="co22RX8zbaftUHRl8hui-3" value="+ caption : String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" parent="co22RX8zbaftUHRl8hui-0" vertex="1">
           <mxGeometry y="52" width="140" height="26" as="geometry" />
         </mxCell>
         <mxCell id="tGmdpOcUXYrbo9x6Zt1I-1" value="+ iban : String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="co22RX8zbaftUHRl8hui-0">
           <mxGeometry y="78" width="140" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="tGmdpOcUXYrbo9x6Zt1I-21" value="+ holderName : String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="co22RX8zbaftUHRl8hui-0">
+          <mxGeometry y="104" width="140" height="26" as="geometry" />
         </mxCell>
         <mxCell id="co22RX8zbaftUHRl8hui-11" value="" style="endArrow=none;endFill=0;html=1;align=left;verticalAlign=top;entryX=-0.007;entryY=0.846;entryDx=0;entryDy=0;entryPerimeter=0;rounded=0;" parent="tRqBK_AUlnNpLzyV8w54-1" target="co22RX8zbaftUHRl8hui-1" edge="1">
           <mxGeometry x="-1" relative="1" as="geometry">
@@ -261,7 +264,7 @@
           <mxGeometry x="430" y="170" width="40" height="20" as="geometry" />
         </mxCell>
         <mxCell id="neW0BnUQqS1TrwB_GYrX-12" value="0..1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="tRqBK_AUlnNpLzyV8w54-1" vertex="1">
-          <mxGeometry x="650" y="226" width="40" height="20" as="geometry" />
+          <mxGeometry x="650" y="252" width="40" height="20" as="geometry" />
         </mxCell>
         <mxCell id="neW0BnUQqS1TrwB_GYrX-13" value="*" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="tRqBK_AUlnNpLzyV8w54-1" vertex="1">
           <mxGeometry x="490" y="728" width="40" height="20" as="geometry" />
