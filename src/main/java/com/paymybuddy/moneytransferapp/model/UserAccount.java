@@ -1,8 +1,10 @@
 package com.paymybuddy.moneytransferapp.model;
 
+import com.paymybuddy.moneytransferapp.UniqueEmail;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 
 @Data
 @Entity
@@ -10,11 +12,12 @@ import javax.persistence.*;
 public class UserAccount {
 
     @Id
-    @GeneratedValue
     @Column(name="id")
-    private int id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
-    @Column(name="email")
+    @UniqueEmail
+    @Column(name="email", unique = true, length = 254, nullable = false)
     private String email;
 
     @Column(name="password")
@@ -30,5 +33,5 @@ public class UserAccount {
     private String address;
 
     @Column(name="account_balance")
-    private float accountBalance;
+    private BigDecimal accountBalance = BigDecimal.ZERO;
 }

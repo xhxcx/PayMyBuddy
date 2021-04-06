@@ -1,19 +1,19 @@
 
 CREATE TABLE transaction_type (
-                id INT NOT NULL,
+                id INT AUTO_INCREMENT NOT NULL,
                 name VARCHAR(25) NOT NULL,
                 PRIMARY KEY (id)
 );
 
 
 CREATE TABLE user_account (
-                id INT NOT NULL,
+                id INT AUTO_INCREMENT NOT NULL,
                 email VARCHAR(254) NOT NULL,
-                password VARCHAR(15) NOT NULL,
+                password VARCHAR(72) NOT NULL,
                 first_name VARCHAR(25) NOT NULL,
                 last_name VARCHAR(25) NOT NULL,
                 address VARCHAR(150) NOT NULL,
-                account_balance DECIMAL(2) NOT NULL,
+                account_balance DECIMAL(7,2) NOT NULL,
                 PRIMARY KEY (id)
 );
 
@@ -23,7 +23,7 @@ CREATE UNIQUE INDEX user_account_idx
  ( email );
 
 CREATE TABLE bank_account (
-                id INT NOT NULL,
+                id INT AUTO_INCREMENT NOT NULL,
                 iban VARCHAR(34) NOT NULL,
                 caption VARCHAR(50) NOT NULL,
                 holder_name VARCHAR(120) NOT NULL,
@@ -33,12 +33,12 @@ CREATE TABLE bank_account (
 
 
 CREATE TABLE transaction (
-                id INT NOT NULL,
+                id INT AUTO_INCREMENT NOT NULL,
                 date DATETIME NOT NULL,
                 description VARCHAR(150) NOT NULL,
                 transaction_type_id INT NOT NULL,
-                fee_rate DECIMAL(2) NOT NULL,
-                amount DECIMAL(2) NOT NULL,
+                fee_rate DECIMAL(5,2) NOT NULL,
+                amount DECIMAL(7,2) NOT NULL,
                 sender_user_id INT NOT NULL,
                 beneficiary_user_id INT NOT NULL,
                 PRIMARY KEY (id)
@@ -46,7 +46,7 @@ CREATE TABLE transaction (
 
 
 CREATE TABLE contact (
-                id INT NOT NULL,
+                id INT AUTO_INCREMENT NOT NULL,
                 contact_alias VARCHAR(50) NOT NULL,
                 user_id INT NOT NULL,
                 contact_user_id INT NOT NULL,
