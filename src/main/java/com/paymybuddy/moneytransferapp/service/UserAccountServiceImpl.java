@@ -17,17 +17,13 @@ public class UserAccountServiceImpl implements UserAccountService{
 
     @Override
     public UserDTO createUser(UserDTO newUser) {
-        if(newUser != null){
-            UserAccount toCreate = UserDtoMapper.INSTANCE.userDtoToUser(newUser);
-            if(userRepository.findUserAccountByEmail(newUser.getEmail()) == null) {
-                userRepository.save(toCreate);
+        if(newUser != null) {
+            if (findUserByEmail(newUser.getEmail()) == null) {
+                userRepository.save(UserDtoMapper.INSTANCE.userDtoToUser(newUser));
                 return newUser;
             }
-            else
-                return null;
         }
-        else
-            return null;
+        return null;
     }
 
     @Override
@@ -38,11 +34,8 @@ public class UserAccountServiceImpl implements UserAccountService{
                 userRepository.save(userToModify);
                 return userToUpdate;
             }
-            else
-                return null;
         }
-        else
-            return null;
+        return null;
     }
 
     @Override
@@ -50,5 +43,10 @@ public class UserAccountServiceImpl implements UserAccountService{
         List<UserAccount> userList = userRepository.findAll();
 
         return UserDtoMapper.INSTANCE.usersToUserDtoList(userList);
+    }
+
+    @Override
+    public UserDTO findUserByEmail(String email) {
+        return UserDtoMapper.INSTANCE.userToUserDTO(userRepository.findUserAccountByEmail(email));
     }
 }

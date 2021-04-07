@@ -1,6 +1,7 @@
 package com.paymybuddy.moneytransferapp;
 
 import com.paymybuddy.moneytransferapp.repository.UserAccountRepository;
+import com.paymybuddy.moneytransferapp.service.UserAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidator;
@@ -11,6 +12,9 @@ public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail, St
     @Autowired
     private UserAccountRepository userAccountRepository;
 
+    @Autowired
+    private UserAccountService userAccountService;
+
     @Override
     public void initialize(UniqueEmail uniqueEmail) {
         System.out.println("Validation in progress");
@@ -18,6 +22,6 @@ public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail, St
 
     @Override
     public boolean isValid(String email, ConstraintValidatorContext constraintValidatorContext) {
-        return userAccountRepository.findUserAccountByEmail(email) == null;
+        return userAccountService.findUserByEmail(email) == null;
     }
 }

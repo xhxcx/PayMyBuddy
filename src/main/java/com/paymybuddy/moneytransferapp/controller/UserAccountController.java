@@ -30,12 +30,13 @@ public class UserAccountController {
         model.addAttribute("user", new UserDTO());
         return "register";
     }
-    //TODO @valid KO avec spring 2.4.4 mais ok avec 2.2.10RELEASE
+
     @PostMapping("/register")
     public String validateUserRegistration(@Valid @ModelAttribute("user") UserDTO user, BindingResult bindingResult, Model model){
         model.addAttribute("user", user);
         if(bindingResult.hasErrors()){
-            model.addAttribute("emailMessage", "Email already exists as a user");
+            if(bindingResult.hasFieldErrors("email"))
+                model.addAttribute("emailMessage", "Email already exists as a user");
             return "register";
         }
         else {

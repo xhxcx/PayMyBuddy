@@ -15,11 +15,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.TestPropertySource;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -47,6 +49,7 @@ public class UserAccountServiceTest {
         userDTO.setLastName("durden");
         userDTO.setAddress("25 rue du nord, 59000 Lille");
         userDTO.setPassword(new BCryptPasswordEncoder().encode("motdepasse"));
+        userDTO.setAccountBalance(BigDecimal.ZERO);
 
         existingUserAccount = UserDtoMapper.INSTANCE.userDtoToUser(userDTO);
         userAccountList.add(existingUserAccount);
@@ -65,11 +68,12 @@ public class UserAccountServiceTest {
             newUserDTO.setAddress("25 rue de paris, 92000 Nanterre");
             newUserDTO.setPassword(new BCryptPasswordEncoder().encode("motdepasse"));
 
-            UserAccount newUser = UserDtoMapper.INSTANCE.userDtoToUser(newUserDTO);
+            UserDTO createdUser = userAccountService.createUser(newUserDTO);
 
             when(userAccountRepositoryMock.findAll()).thenReturn(userAccountList);
-            when(userAccountRepositoryMock.save(any())).thenReturn(newUser);
-            assertThat(userAccountService.createUser(newUserDTO)).isEqualTo(newUserDTO);
+            when(userAccountRepositoryMock.save(any(UserAccount.class))).thenReturn(new UserAccount());
+
+            assertThat(createdUser).isEqualTo(newUserDTO);
             verify(userAccountRepositoryMock, Mockito.times(1)).save(any());
         }
 
@@ -94,6 +98,15 @@ public class UserAccountServiceTest {
             assertThat(userAccountService.createUser(newUserDTO)).isEqualTo(null);
             verify(userAccountRepositoryMock, Mockito.times(0)).save(any());
         }
+    }
+
+    @Test
+    public void findUserByEmailTest(){
+        when(userAccountRepositoryMock.findUserAccountByEmail(anyString())).thenReturn(existingUserAccount);
+
+        UserDTO foundUser = userAccountService.findUserByEmail("toto.test@test.com");
+
+        assertThat(foundUser).isEqualTo(userDTO);
     }
 
 }
