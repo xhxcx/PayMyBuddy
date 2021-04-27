@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
-import java.util.List;
+import java.security.Principal;
 
 @Controller
 public class UserAccountController {
@@ -46,6 +46,14 @@ public class UserAccountController {
             userAccountService.createUser(user);
         }
         return "register_success";
+    }
+
+    @GetMapping(path = "/dashboard")
+    private String goToLoggedDashboard(Model model, Principal principal){
+        if(principal != null) {
+            model.addAttribute("principal", "Welcome on your dashboard " + principal.getName());
+        }
+        return "dashboard";
     }
 
 }
