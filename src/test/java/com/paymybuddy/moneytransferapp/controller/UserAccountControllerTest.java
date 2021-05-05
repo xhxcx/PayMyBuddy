@@ -1,6 +1,8 @@
 package com.paymybuddy.moneytransferapp.controller;
 
+import com.paymybuddy.moneytransferapp.model.UserAccount;
 import com.paymybuddy.moneytransferapp.model.dto.UserDTO;
+import com.paymybuddy.moneytransferapp.service.ContactService;
 import com.paymybuddy.moneytransferapp.service.UserAccountService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -30,23 +32,26 @@ public class UserAccountControllerTest {
     @MockBean
     private UserAccountService userAccountServiceMock;
 
+    @MockBean
+    private ContactService contactServiceMock;
+
     @Autowired
     private MockMvc mockMvc;
 
-    private static UserDTO userDTO;
-    private static List<UserDTO> userList;
+    private static UserAccount user;
+    private static List<UserAccount> userList;
 
     @BeforeAll
     public static void setUp(){
         userList = new ArrayList<>();
-        userDTO = new UserDTO();
-        userDTO.setEmail("tyler.durden@test.com");
-        userDTO.setFirstName("tyler");
-        userDTO.setLastName("durden");
-        userDTO.setAddress("25 rue du nord, 59000 Lille");
-        userDTO.setPassword(new BCryptPasswordEncoder().encode("motdepasse"));
+        user = new UserAccount();
+        user.setEmail("tyler.durden@test.com");
+        user.setFirstName("tyler");
+        user.setLastName("durden");
+        user.setAddress("25 rue du nord, 59000 Lille");
+        user.setPassword(new BCryptPasswordEncoder().encode("motdepasse"));
 
-        userList.add(userDTO);
+        userList.add(user);
 
     }
 
@@ -68,7 +73,7 @@ public class UserAccountControllerTest {
     @Test
     public void validateUserRegistrationForAlreadyExistingEmailTest() throws Exception {
         when(userAccountServiceMock.getAllUsers()).thenReturn(userList);
-        when(userAccountServiceMock.findUserByEmail(anyString())).thenReturn(userDTO);
+        when(userAccountServiceMock.findUserByEmail(anyString())).thenReturn(user);
         String existingUser = "{\"firstName\":\"tyler\",\"lastName\":\"Durden\",\"email\":\"tyler.durden@test.com\",\"address\":\"25 rue du nord, 59000 Lille\",\"password\":\"password\"}";
         mockMvc.perform(post("/register")
         .contentType(MediaType.APPLICATION_JSON)
@@ -79,7 +84,7 @@ public class UserAccountControllerTest {
                 .andExpect(model().attributeExists("emailMessage"))
                 .andExpect(view().name("register"));
 
-        verify(userAccountServiceMock, times(0)).createUser(any(UserDTO.class));
+        verify(userAccountServiceMock, times(0)).createUser(any(UserAccount.class));
     }
 
     @Test
@@ -100,7 +105,7 @@ public class UserAccountControllerTest {
                 .andExpect(model().attributeExists("user"))
                 .andExpect(view().name("register_success"));
 
-        verify(userAccountServiceMock, times(1)).createUser(any(UserDTO.class));
+        verify(userAccountServiceMock, times(1)).createUser(any(UserAccount.class));
     }
 
     @Test
@@ -113,10 +118,12 @@ public class UserAccountControllerTest {
     @Test
     @WithMockUser(username = "user.test",password = "mdpTest")
     public void goToLoggedDashboardTest() throws Exception {
-
+       // when(contactServiceMock.getAllContactsForUser(anyString())).thenReturn(null);
+        when(userAccountServiceMock.findUserByEmail(anyString())).thenReturn(user);
         mockMvc.perform(get("/dashboard"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("dashboard"))
-                .andExpect(model().attributeExists("principal"));
+                .andExpect(model().attributeExists("currentUser"))
+                .andExpect(model().attribute("currentUser",user));
     }
 }

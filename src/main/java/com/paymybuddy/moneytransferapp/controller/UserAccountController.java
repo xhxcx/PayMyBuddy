@@ -1,6 +1,9 @@
 package com.paymybuddy.moneytransferapp.controller;
 
+import com.paymybuddy.moneytransferapp.model.Contact;
+import com.paymybuddy.moneytransferapp.model.UserAccount;
 import com.paymybuddy.moneytransferapp.model.dto.UserDTO;
+import com.paymybuddy.moneytransferapp.model.dto.UserDtoMapper;
 import com.paymybuddy.moneytransferapp.service.UserAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -13,12 +16,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 public class UserAccountController {
 
     @Autowired
-    UserAccountService userAccountService;
+    private UserAccountService userAccountService;
+
+    @Autowired
+    private UserDtoMapper userDtoMapper;
 
     @GetMapping("/")
     public String viewHome(){
@@ -43,7 +50,7 @@ public class UserAccountController {
             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
             String encodedPassword = passwordEncoder.encode(user.getPassword());
             user.setPassword(encodedPassword);
-            userAccountService.createUser(user);
+            userAccountService.createUser(userDtoMapper.userDtoToUser(user));
         }
         return "register_success";
     }
@@ -51,9 +58,14 @@ public class UserAccountController {
     @GetMapping(path = "/dashboard")
     private String goToLoggedDashboard(Model model, Principal principal){
         if(principal != null) {
-            model.addAttribute("principal", "Welcome on your dashboard " + principal.getName());
+            UserAccount currentUser = userAccountService.findUserByEmail(principal.getName());
+            model.addAttribute("currentUser", currentUser);
+            List<Contact> contactList = currentUser.getContactList();
+            if(contactList != null)
+                model.addAttribute("contactList", contactList);
+            return "dashboard";
         }
-        return "dashboard";
+        return "index";
     }
 
 }

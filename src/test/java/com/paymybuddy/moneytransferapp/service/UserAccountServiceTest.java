@@ -1,8 +1,6 @@
 package com.paymybuddy.moneytransferapp.service;
 
 import com.paymybuddy.moneytransferapp.model.UserAccount;
-import com.paymybuddy.moneytransferapp.model.dto.UserDTO;
-import com.paymybuddy.moneytransferapp.model.dto.UserDtoMapper;
 import com.paymybuddy.moneytransferapp.repository.UserAccountRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -35,24 +33,21 @@ public class UserAccountServiceTest {
     @InjectMocks
     private UserAccountServiceImpl userAccountService;
 
-    private UserDTO userDTO;
-
-    private UserAccount existingUserAccount;
+    private UserAccount user;
 
     private List<UserAccount> userAccountList = new ArrayList<>();
 
     @BeforeEach
     private void setUpPerTest(){
-        userDTO = new UserDTO();
-        userDTO.setEmail("tyler.durden@test.com");
-        userDTO.setFirstName("tyler");
-        userDTO.setLastName("durden");
-        userDTO.setAddress("25 rue du nord, 59000 Lille");
-        userDTO.setPassword(new BCryptPasswordEncoder().encode("motdepasse"));
-        userDTO.setAccountBalance(BigDecimal.ZERO);
+        user = new UserAccount();
+        user.setEmail("tyler.durden@test.com");
+        user.setFirstName("tyler");
+        user.setLastName("durden");
+        user.setAddress("25 rue du nord, 59000 Lille");
+        user.setPassword(new BCryptPasswordEncoder().encode("motdepasse"));
+        user.setAccountBalance(BigDecimal.ZERO);
 
-        existingUserAccount = UserDtoMapper.INSTANCE.userDtoToUser(userDTO);
-        userAccountList.add(existingUserAccount);
+        userAccountList.add(user);
 
     }
 
@@ -61,19 +56,19 @@ public class UserAccountServiceTest {
     class CreateUserTests {
         @Test
         public void createUserTest() {
-            UserDTO newUserDTO = new UserDTO();
-            newUserDTO.setEmail("toto.test@test.com");
-            newUserDTO.setFirstName("toto");
-            newUserDTO.setLastName("test");
-            newUserDTO.setAddress("25 rue de paris, 92000 Nanterre");
-            newUserDTO.setPassword(new BCryptPasswordEncoder().encode("motdepasse"));
+            UserAccount newUser = new UserAccount();
+            newUser.setEmail("toto.test@test.com");
+            newUser.setFirstName("toto");
+            newUser.setLastName("test");
+            newUser.setAddress("25 rue de paris, 92000 Nanterre");
+            newUser.setPassword(new BCryptPasswordEncoder().encode("motdepasse"));
 
-            UserDTO createdUser = userAccountService.createUser(newUserDTO);
+            UserAccount createdUser = userAccountService.createUser(newUser);
 
             when(userAccountRepositoryMock.findAll()).thenReturn(userAccountList);
             when(userAccountRepositoryMock.save(any(UserAccount.class))).thenReturn(new UserAccount());
 
-            assertThat(createdUser).isEqualTo(newUserDTO);
+            assertThat(createdUser).isEqualTo(newUser);
             verify(userAccountRepositoryMock, Mockito.times(1)).save(any());
         }
 
@@ -86,27 +81,27 @@ public class UserAccountServiceTest {
 
         @Test
         public void createUserWithAlreadyExistingEmailTest() {
-            UserDTO newUserDTO = new UserDTO();
-            newUserDTO.setEmail("tyler.durden@test.com");
-            newUserDTO.setFirstName("toto");
-            newUserDTO.setLastName("test");
-            newUserDTO.setAddress("25 rue de paris, 92000 Nanterre");
-            newUserDTO.setPassword(new BCryptPasswordEncoder().encode("motdepasse"));
+            UserAccount newUser = new UserAccount();
+            newUser.setEmail("tyler.durden@test.com");
+            newUser.setFirstName("toto");
+            newUser.setLastName("test");
+            newUser.setAddress("25 rue de paris, 92000 Nanterre");
+            newUser.setPassword(new BCryptPasswordEncoder().encode("motdepasse"));
 
             when(userAccountRepositoryMock.findAll()).thenReturn(userAccountList);
-            when(userAccountRepositoryMock.findUserAccountByEmail("tyler.durden@test.com")).thenReturn(existingUserAccount);
-            assertThat(userAccountService.createUser(newUserDTO)).isEqualTo(null);
+            when(userAccountRepositoryMock.findUserAccountByEmail("tyler.durden@test.com")).thenReturn(user);
+            assertThat(userAccountService.createUser(newUser)).isEqualTo(null);
             verify(userAccountRepositoryMock, Mockito.times(0)).save(any());
         }
     }
 
     @Test
     public void findUserByEmailTest(){
-        when(userAccountRepositoryMock.findUserAccountByEmail(anyString())).thenReturn(existingUserAccount);
+        when(userAccountRepositoryMock.findUserAccountByEmail(anyString())).thenReturn(user);
 
-        UserDTO foundUser = userAccountService.findUserByEmail("toto.test@test.com");
+        UserAccount foundUser = userAccountService.findUserByEmail("toto.test@test.com");
 
-        assertThat(foundUser).isEqualTo(userDTO);
+        assertThat(foundUser).isEqualTo(user);
     }
 
 }

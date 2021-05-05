@@ -1,6 +1,6 @@
 package com.paymybuddy.moneytransferapp.service;
 
-import com.paymybuddy.moneytransferapp.model.dto.UserDTO;
+import com.paymybuddy.moneytransferapp.model.UserAccount;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -8,11 +8,11 @@ import java.util.List;
 @Service
 public interface UserAccountService {
 
-    UserDTO createUser(UserDTO newUser);
+    UserAccount createUser(UserAccount newUser);
 
-    UserDTO updateUser(UserDTO userToUpdate);
+    UserAccount updateUser(UserAccount userToUpdate);
 
-    List<UserDTO> getAllUsers();
+    List<UserAccount> getAllUsers();
 
-    UserDTO findUserByEmail(String email);
+    UserAccount findUserByEmail(String email);
 }
