@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>PayMyBuddy - Add contact</title>
+    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css" />
+    <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container text-center">
+    <div>
+        <h1>Add a new contact</h1>
+    </div>
+    <form th:action="@{/addContact}"
+          method="post" style="max-width: 600px; margin: 0 auto;">
+        <div class="m-3">
+            <div class="form-group row">
+                <label class="col-4 col-form-label">E-mail: </label>
+                <div class="col-8">
+                    <input type="email" th:name="contactEmail" class="form-control" required />
+                    <span th:text="${emailErrorMessage}"></span>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-4 col-form-label">Contact description : </label>
+                <div class="col-8">
+                    <input type="text" th:name="alias" class="form-control"
+                           required minlength="1" maxlength="50"/>
+                </div>
+            </div>
+            <div>
+                <button type="submit" class="btn btn-primary">Add contact</button>
+            </div>
+            <div>
+                <span class="error" style="color: red" th:text="${errorMessage}"></span>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>

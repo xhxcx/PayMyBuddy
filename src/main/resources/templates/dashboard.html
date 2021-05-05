@@ -15,8 +15,26 @@
                 </form>
             </div>
             <div>
-                <h1><span th:text="${principal}"></span></h1>
+                <h1><span th:text="'Welcome on your PayMyBuddy dashboard ' + ${currentUser.firstName} + ' ' + ${currentUser.lastName}"></span></h1>
             </div>
+            <div>
+                <a th:href="@{/addContact}">Add a contact</a>
+            </div>
+
+            <table class="table table-striped table-bordered">
+                <thead class="thead-dark">
+                <tr>
+                    <th>Contact alias</th>
+                    <th>First Name</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="contact : ${contactList}">
+                        <td th:text="${contact.alias}"></td>
+                        <td th:text="${contact.contactUser.firstName}">Title ...</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </body>
 </html>
