@@ -1,17 +1,19 @@
 package com.paymybuddy.moneytransferapp.model;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name="transaction")
 public class Transaction {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
 
@@ -22,20 +24,23 @@ public class Transaction {
     private String description;
 
     @Column(name = "fee_rate")
-    private float feeRate;
+    private double feeRate;
 
     @Column(name = "amount")
-    private float amount;
+    private double amount;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "transaction_type_id")
+    @Column(name = "transaction_type")
     private TransactionType transactionType;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "sender_user_id")
     private UserAccount sender;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "beneficiary_user_id")
     private UserAccount beneficiary;
+
+    @OneToOne
+    @JoinColumn(name = "bank_account_id")
+    private BankAccount bankAccount;
 }
