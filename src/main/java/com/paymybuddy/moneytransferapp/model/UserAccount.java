@@ -1,14 +1,16 @@
 package com.paymybuddy.moneytransferapp.model;
 
 import com.paymybuddy.moneytransferapp.UniqueEmail;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name="user_account")
 public class UserAccount {
@@ -18,7 +20,7 @@ public class UserAccount {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @UniqueEmail
+    //@UniqueEmail
     @Column(name="email", unique = true, length = 254, nullable = false)
     private String email;
 
@@ -39,4 +41,7 @@ public class UserAccount {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Contact> contactList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
+    private List<Transaction> transactionListAsSender = new ArrayList<>();
 }
