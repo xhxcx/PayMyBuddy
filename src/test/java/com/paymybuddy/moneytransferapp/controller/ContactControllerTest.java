@@ -53,6 +53,7 @@ public class ContactControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "tyler.durden@gmail.com",password = "mdpTest")
     public void showAddContactFormTest() throws Exception {
         mockMvc.perform(get("/addContact"))
                 .andExpect(status().isOk())

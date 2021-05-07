@@ -1,6 +1,5 @@
 package com.paymybuddy.moneytransferapp.controller;
 
-import com.paymybuddy.moneytransferapp.model.Contact;
 import com.paymybuddy.moneytransferapp.model.UserAccount;
 import com.paymybuddy.moneytransferapp.model.dto.UserDTO;
 import com.paymybuddy.moneytransferapp.model.dto.UserDtoMapper;
@@ -16,7 +15,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
 import java.security.Principal;
-import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @Controller
 public class UserAccountController {
@@ -27,8 +27,13 @@ public class UserAccountController {
     @Autowired
     private UserDtoMapper userDtoMapper;
 
+    private static final Logger logger = LogManager.getLogger(UserAccountController.class);
+
     @GetMapping("/")
-    public String viewHome(){
+    public String viewHome(@ModelAttribute("currentUser")UserAccount currentUser){
+        if(currentUser != null)
+            return "dashboard";
+        logger.info("Go to HP");
         return "index";
     }
 
@@ -58,11 +63,6 @@ public class UserAccountController {
     @GetMapping(path = "/dashboard")
     private String goToLoggedDashboard(Model model, Principal principal){
         if(principal != null) {
-            UserAccount currentUser = userAccountService.findUserByEmail(principal.getName());
-            model.addAttribute("currentUser", currentUser);
-            List<Contact> contactList = currentUser.getContactList();
-            if(contactList != null)
-                model.addAttribute("contactList", contactList);
             return "dashboard";
         }
         return "index";
