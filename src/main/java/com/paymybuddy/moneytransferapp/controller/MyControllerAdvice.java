@@ -1,5 +1,6 @@
 package com.paymybuddy.moneytransferapp.controller;
 
+import com.paymybuddy.moneytransferapp.model.BankAccount;
 import com.paymybuddy.moneytransferapp.model.Contact;
 import com.paymybuddy.moneytransferapp.model.Transaction;
 import com.paymybuddy.moneytransferapp.model.UserAccount;
@@ -26,6 +27,7 @@ public class MyControllerAdvice {
         }
         model.addAttribute("currentUser",currentUser);
 
+
         if(currentUser != null) {
             List<Contact> contactList = currentUser.getContactList();
             if (!contactList.isEmpty())
@@ -34,6 +36,10 @@ public class MyControllerAdvice {
             List<Transaction> transactions = currentUser.getTransactionListAsSender();
             if (!transactions.isEmpty())
                 model.addAttribute("transactionList", transactions);
+
+            List<BankAccount> bankAccounts = currentUser.getBankAccountList();
+            if (!bankAccounts.isEmpty())
+                model.addAttribute("bankAccounts", bankAccounts);
         }
     }
 }

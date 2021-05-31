@@ -3,6 +3,7 @@ package com.paymybuddy.moneytransferapp.model;
 import com.paymybuddy.moneytransferapp.UniqueEmail;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -11,6 +12,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@ToString(of = {"firstName","lastName"})
 @Entity
 @Table(name="user_account")
 public class UserAccount {
@@ -44,4 +46,7 @@ public class UserAccount {
 
     @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
     private List<Transaction> transactionListAsSender = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.DETACH)
+    private List<BankAccount> bankAccountList = new ArrayList<>();
 }

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Bank Accounts</title>
+    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css" />
+    <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container text-center">
+    <div>
+        <form th:action="@{/logout}" method="post">
+            <input type="submit" value="Sign Out" />
+        </form>
+    </div>
+    <div>
+        <h1><span th:text="'Welcome on PayMyBuddy ' + ${currentUser.firstName} + ' ' + ${currentUser.lastName}"></span></h1>
+    </div>
+    <div>
+        <a th:href="@{/addBankAccount}">Add new bank account</a>
+    </div>
+
+    <table class="table table-striped table-bordered">
+        <thead class="thead-dark">
+        <tr>
+            <th>RIB title</th>
+            <th>IBAN</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="bankAccount : ${bankAccounts}">
+            <td th:text="${bankAccount.caption}">Empty caption</td>
+            <td th:text="${bankAccount.iban}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
