@@ -1,6 +1,5 @@
 package com.paymybuddy.moneytransferapp.model;
 
-import com.paymybuddy.moneytransferapp.UniqueEmail;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -41,10 +40,10 @@ public class UserAccount {
     @Column(name="account_balance")
     private BigDecimal accountBalance = BigDecimal.ZERO;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.DETACH)
     private List<Contact> contactList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.DETACH)
     private List<Transaction> transactionListAsSender = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.DETACH)

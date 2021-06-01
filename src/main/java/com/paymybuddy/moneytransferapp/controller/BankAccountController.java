@@ -4,6 +4,7 @@ import com.paymybuddy.moneytransferapp.model.BankAccount;
 import com.paymybuddy.moneytransferapp.model.UserAccount;
 import com.paymybuddy.moneytransferapp.model.dto.BankAccountDTO;
 import com.paymybuddy.moneytransferapp.model.dto.BankAccountDtoMapper;
+import com.paymybuddy.moneytransferapp.model.dto.TransactionDTO;
 import com.paymybuddy.moneytransferapp.service.BankAccountService;
 import com.paymybuddy.moneytransferapp.service.UserAccountService;
 import org.apache.logging.log4j.LogManager;
@@ -31,6 +32,7 @@ public class BankAccountController {
     @GetMapping("/bankAccount")
     public String goToBankAccountsForCurrentUser(Model model){
         UserAccount currentUser = getCurrentUserAsEntity(model);
+        model.addAttribute("transactionDTO", new TransactionDTO());
         if (currentUser == null) {
             logger.info("Unknown current user, redirect to homepage");
             return "index";
@@ -47,23 +49,23 @@ public class BankAccountController {
         return "add_bank_account";
     }
 
-    //TODO gérer par un objet DTO plutot que prendre x params ? pb pour add le currentUser en hidden à partir du front
     @PostMapping("addBankAccount")
-//    public String addBankAccount(@Valid @ModelAttribute("newBankAccount")BankAccountDTO bankAccountDTO, BindingResult result, Model model){
-    public String addBankAccount(@RequestParam String caption,@RequestParam String iban, @RequestParam String holderName, Model model){
-        /*if(result.hasErrors()){
+    public String addBankAccount(@Valid @ModelAttribute("newBankAccount")BankAccountDTO bankAccountDTO, BindingResult result, Model model){
+        if(result.hasErrors()){
             System.out.println(result.getFieldErrors());
             model.addAttribute("bankAccountError", "Bank account informations are not ok to save");
             return "add_bank_account";
         }
-        else{*/
-            BankAccount bankAccountToAdd = new BankAccount();
-            bankAccountToAdd.setCaption(caption);
-            bankAccountToAdd.setIban(iban);
-            bankAccountToAdd.setHolderName(holderName);
-            bankAccountToAdd.setUser(getCurrentUserAsEntity(model));
-            bankAccountService.addNewBankAccount(bankAccountToAdd);
-        //}
+        else {
+            bankAccountService.addNewBankAccount(BankAccountDtoMapper.INSTANCE.DTOToEntity(bankAccountDTO));
+        }
+    /*public String addBankAccount(@RequestParam String caption,@RequestParam String iban, @RequestParam String holderName, Model model){
+        BankAccount bankAccountToAdd = new BankAccount();
+        bankAccountToAdd.setCaption(caption);
+        bankAccountToAdd.setIban(iban);
+        bankAccountToAdd.setHolderName(holderName);
+        bankAccountToAdd.setUser(getCurrentUserAsEntity(model));
+        bankAccountService.addNewBankAccount(bankAccountToAdd);*/
         return "redirect:/bankAccount";
     }
 

@@ -33,15 +33,17 @@ public class TransactionServiceImpl implements TransactionService{
 
     @Transactional
     @Override
-    public Transaction prepareNewContactTransaction(TransactionDTO transactionDTO) {
+    public Transaction prepareNewTransaction(TransactionDTO transactionDTO) {
         Transaction newTransaction = new Transaction();
         newTransaction.setAmount(transactionDTO.getAmount());
         newTransaction.setSender(transactionDTO.getSender());
         newTransaction.setBeneficiary(transactionDTO.getBeneficiary());
         newTransaction.setDescription(transactionDTO.getDescription());
         newTransaction.setDate(Timestamp.valueOf(LocalDateTime.now()));
-        newTransaction.setFeeRate(FeeRate.CONTACT_TRANSFER_PAYMENT_FEE_RATE);
-        newTransaction.setTransactionType(TransactionType.CONTACT_TRANSFER_PAYMENT);
+        newTransaction.setTransactionType(transactionDTO.getTransactionType());
+        String feeValue = transactionDTO.getTransactionType()+"_FEE_RATE";
+        newTransaction.setFeeRate(FeeRate.valueOf(feeValue).getValue());
+        newTransaction.setBankAccount(transactionDTO.getBankAccount());
 
         return newTransaction;
     }
@@ -105,13 +107,13 @@ public class TransactionServiceImpl implements TransactionService{
         double transactionAmountForSender = amount;
         switch (transactionType){
             case BANK_TRANSFER_WITHDRAWAL:
-                transactionAmountForSender += amount*FeeRate.BANK_TRANSFER_WITHDRAWAL_FEE_RATE/100;
+                transactionAmountForSender += amount*FeeRate.BANK_TRANSFER_WITHDRAWAL_FEE_RATE.getValue()/100;
                 break;
             case BANK_TRANSFER_DEPOSIT:
-                transactionAmountForSender -= amount*FeeRate.BANK_TRANSFER_DEPOSIT_FEE_RATE/100;
+                transactionAmountForSender -= amount*FeeRate.BANK_TRANSFER_DEPOSIT_FEE_RATE.getValue()/100;
                 break;
             case CONTACT_TRANSFER_PAYMENT:
-                transactionAmountForSender += amount*FeeRate.CONTACT_TRANSFER_PAYMENT_FEE_RATE/100;
+                transactionAmountForSender += amount*FeeRate.CONTACT_TRANSFER_PAYMENT_FEE_RATE.getValue()/100;
                 break;
         }
         return transactionAmountForSender;

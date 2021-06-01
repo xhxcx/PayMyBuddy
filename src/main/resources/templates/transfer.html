@@ -16,6 +16,7 @@
             </div>
             <div>
                 <h1><span th:text="'Welcome on your PayMyBuddy ' + ${currentUser.firstName} + ' ' + ${currentUser.lastName}"></span></h1>
+                <h2><span th:text="'Account balance : ' + ${currentUser.accountBalance}"></span></h2>
             </div>
             <div>
                 <h2>Send money</h2>
@@ -34,6 +35,7 @@
 
                                 <input type="text" th:field="*{description}" placeholder="Description" class="form-control" required minlength="2" />
                                 <input th:type="hidden" id="sender" name="sender" th:value="${currentUser.id}" class="form-control" readonly>
+                                <input th:type="hidden" id="transactionType" name="transactionType" th:value="'CONTACT_TRANSFER_PAYMENT'" class="form-control" readonly>
                                 <button type="submit" class="btn btn-primary">Pay</button>
                             </div>
                         </div>

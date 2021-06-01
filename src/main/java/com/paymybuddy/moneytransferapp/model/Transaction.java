@@ -2,12 +2,14 @@ package com.paymybuddy.moneytransferapp.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Getter
 @Setter
+@ToString
 @Entity
 @Table(name="transaction")
 public class Transaction {

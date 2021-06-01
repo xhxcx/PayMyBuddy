@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface TransactionService {
-    Transaction prepareNewContactTransaction(TransactionDTO transactionDTO);
+    Transaction prepareNewTransaction(TransactionDTO transactionDTO);
 
     Transaction processTransaction(Transaction transaction) throws PMBTransactionException;
 }

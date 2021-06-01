@@ -1,6 +1,6 @@
 package com.paymybuddy.moneytransferapp.model.dto;
 
-import com.paymybuddy.moneytransferapp.UniqueEmail;
+import com.paymybuddy.moneytransferapp.validators.UniqueEmail;
 import lombok.Data;
 
 import javax.validation.constraints.*;

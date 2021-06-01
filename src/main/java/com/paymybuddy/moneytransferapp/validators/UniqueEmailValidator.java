@@ -1,4 +1,4 @@
-package com.paymybuddy.moneytransferapp;
+package com.paymybuddy.moneytransferapp.validators;
 
 import com.paymybuddy.moneytransferapp.repository.UserAccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;

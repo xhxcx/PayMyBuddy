@@ -1,4 +1,4 @@
-package com.paymybuddy.moneytransferapp;
+package com.paymybuddy.moneytransferapp.validators;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -8,14 +8,14 @@ import java.lang.annotation.Target;
 
 import static java.lang.annotation.ElementType.*;
 
-@Constraint(validatedBy = UniqueEmailValidator.class)
-@Target({ METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER })
+@Constraint(validatedBy = TransactionDestinationValidator.class)
+@Target(TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface UniqueEmail {
+public @interface TransactionDestination {
 
-    String message() default "Email is already used";
+    String message() default "A transaction must have a beneficiary to send money or a bank account for bank transfer";
 
-    Class<?>[] groups() default {};
-
+    Class[] groups() default {};
     Class<? extends Payload>[] payload() default {};
+
 }

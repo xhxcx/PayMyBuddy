@@ -2,7 +2,6 @@ package com.paymybuddy.moneytransferapp.controller;
 
 import com.paymybuddy.moneytransferapp.exceptions.PMBTransactionException;
 import com.paymybuddy.moneytransferapp.model.Transaction;
-import com.paymybuddy.moneytransferapp.model.TransactionType;
 import com.paymybuddy.moneytransferapp.model.UserAccount;
 import com.paymybuddy.moneytransferapp.model.dto.TransactionDTO;
 import com.paymybuddy.moneytransferapp.service.TransactionService;
@@ -20,6 +19,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.paymybuddy.moneytransferapp.model.TransactionType.CONTACT_TRANSFER_PAYMENT;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -39,8 +39,8 @@ public class TransactionControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    private UserAccount currentUser = new UserAccount();
-    private List<Transaction> transactionList = new ArrayList<>();
+    private final UserAccount currentUser = new UserAccount();
+    private final List<Transaction> transactionList = new ArrayList<>();
 
     @BeforeEach
     public void setUp(){
@@ -52,7 +52,7 @@ public class TransactionControllerTest {
 
         Transaction existingTransaction = new Transaction();
         existingTransaction.setSender(currentUser);
-        existingTransaction.setTransactionType(TransactionType.CONTACT_TRANSFER_PAYMENT);
+        existingTransaction.setTransactionType(CONTACT_TRANSFER_PAYMENT);
         existingTransaction.setBeneficiary(new UserAccount());
         existingTransaction.setDescription("test");
         existingTransaction.setAmount(10);
@@ -75,7 +75,7 @@ public class TransactionControllerTest {
 
     @Test
     @WithMockUser(username = "tyler.durden@gmail.com",password = "mdpTest")
-    public void ValidateContactTransferSuccessTest() throws Exception {
+    public void ValidateTransferSuccessTest() throws Exception {
 
         UserAccount beneficiary = new UserAccount();
         beneficiary.setId(2);
@@ -84,7 +84,7 @@ public class TransactionControllerTest {
 
         Transaction transaction = new Transaction();
         transaction.setSender(currentUser);
-        transaction.setTransactionType(TransactionType.CONTACT_TRANSFER_PAYMENT);
+        transaction.setTransactionType(CONTACT_TRANSFER_PAYMENT);
         transaction.setBeneficiary(beneficiary);
         transaction.setDescription("transaction2");
         transaction.setAmount(10);
@@ -94,10 +94,11 @@ public class TransactionControllerTest {
         transactionDTO.setBeneficiary(beneficiary);
         transactionDTO.setAmount(10);
         transactionDTO.setDescription("transaction2");
+        transactionDTO.setTransactionType(CONTACT_TRANSFER_PAYMENT);
 
         when(userAccountServiceMock.findUserByEmail("tyler.durden@gmail.com")).thenReturn(currentUser);
 
-        when(transactionServiceMock.prepareNewContactTransaction(transactionDTO)).thenReturn(transaction);
+        when(transactionServiceMock.prepareNewTransaction(transactionDTO)).thenReturn(transaction);
         when(transactionServiceMock.processTransaction(transaction)).thenReturn(transaction);
 
         mockMvc.perform(post("/transfer")
@@ -110,7 +111,7 @@ public class TransactionControllerTest {
 
     @Test
     @WithMockUser(username = "tyler.durden@gmail.com",password = "mdpTest")
-    public void ValidateContactTransferAmountTooLowTest() throws Exception {
+    public void ValidateTransferAmountTooLowTest() throws Exception {
 
         UserAccount beneficiary = new UserAccount();
         beneficiary.setId(2);
@@ -122,6 +123,7 @@ public class TransactionControllerTest {
         transactionDTO.setBeneficiary(beneficiary);
         transactionDTO.setAmount(0.5);
         transactionDTO.setDescription("transaction with amount too low");
+        transactionDTO.setTransactionType(CONTACT_TRANSFER_PAYMENT);
 
         when(userAccountServiceMock.findUserByEmail("tyler.durden@gmail.com")).thenReturn(currentUser);
 
@@ -136,7 +138,7 @@ public class TransactionControllerTest {
 
     @Test
     @WithMockUser(username = "tyler.durden@gmail.com",password = "mdpTest")
-    public void ValidateContactTransferAmountTooHighTest() throws Exception {
+    public void ValidateTransferAmountTooHighTest() throws Exception {
 
         UserAccount beneficiary = new UserAccount();
         beneficiary.setId(2);
@@ -145,7 +147,7 @@ public class TransactionControllerTest {
 
         Transaction transaction = new Transaction();
         transaction.setSender(currentUser);
-        transaction.setTransactionType(TransactionType.CONTACT_TRANSFER_PAYMENT);
+        transaction.setTransactionType(CONTACT_TRANSFER_PAYMENT);
         transaction.setBeneficiary(beneficiary);
         transaction.setDescription("transaction amount too high for sender");
         transaction.setAmount(10000);
@@ -155,10 +157,11 @@ public class TransactionControllerTest {
         transactionDTO.setBeneficiary(beneficiary);
         transactionDTO.setAmount(10000);
         transactionDTO.setDescription("transaction amount too high for sender");
+        transactionDTO.setTransactionType(CONTACT_TRANSFER_PAYMENT);
 
         when(userAccountServiceMock.findUserByEmail("tyler.durden@gmail.com")).thenReturn(currentUser);
 
-        when(transactionServiceMock.prepareNewContactTransaction(transactionDTO)).thenReturn(transaction);
+        when(transactionServiceMock.prepareNewTransaction(transactionDTO)).thenReturn(transaction);
         when(transactionServiceMock.processTransaction(transaction)).thenThrow(PMBTransactionException.class);
 
         mockMvc.perform(post("/transfer")

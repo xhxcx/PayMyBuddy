@@ -1,9 +1,6 @@
 package com.paymybuddy.moneytransferapp.controller;
 
-import com.paymybuddy.moneytransferapp.model.BankAccount;
-import com.paymybuddy.moneytransferapp.model.Contact;
-import com.paymybuddy.moneytransferapp.model.Transaction;
-import com.paymybuddy.moneytransferapp.model.UserAccount;
+import com.paymybuddy.moneytransferapp.model.*;
 import com.paymybuddy.moneytransferapp.service.UserAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -11,7 +8,10 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 @ControllerAdvice
 public class MyControllerAdvice {
@@ -41,5 +41,10 @@ public class MyControllerAdvice {
             if (!bankAccounts.isEmpty())
                 model.addAttribute("bankAccounts", bankAccounts);
         }
+
+        List<TransactionType> bankTransactionTypes = new ArrayList<>();
+        bankTransactionTypes.add(TransactionType.BANK_TRANSFER_DEPOSIT);
+        bankTransactionTypes.add(TransactionType.BANK_TRANSFER_WITHDRAWAL);
+        model.addAttribute("transactionTypes", bankTransactionTypes);
     }
 }
