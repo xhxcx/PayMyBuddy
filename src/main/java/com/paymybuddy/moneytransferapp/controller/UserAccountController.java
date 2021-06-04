@@ -36,9 +36,6 @@ public class UserAccountController {
     @Autowired
     private ContactService contactService;
 
-    @Autowired
-    private UserDtoMapper userDtoMapper;
-
     private static final Logger logger = LogManager.getLogger(UserAccountController.class);
 
     @GetMapping("/")
@@ -74,7 +71,7 @@ public class UserAccountController {
             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
             String encodedPassword = passwordEncoder.encode(user.getPassword());
             user.setPassword(encodedPassword);
-            userAccountService.createUser(userDtoMapper.userDtoToUser(user));
+            userAccountService.createUser(UserDtoMapper.INSTANCE.userDtoToUser(user));
         }
         return "register_success";
     }
