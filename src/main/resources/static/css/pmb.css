@@ -1,0 +1,25 @@
+:root{
+    --pmb-green-color : #5cb95c;
+}
+.text-align-end{
+    text-align: end;
+}
+.pmb-theme{
+    background-color: var(--pmb-green-color);
+    border-color: var(--pmb-green-color);
+    color:white;
+}
+.pmb-text{
+    color: var(--pmb-green-color);
+}
+
+.pmb-table {
+    border : black 2px solid;
+}
+.pmb-table tr{
+    line-height: 5rem;
+}
+
+.error{
+    color: red;
+}
