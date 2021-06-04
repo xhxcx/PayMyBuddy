@@ -5,10 +5,12 @@ import com.paymybuddy.moneytransferapp.model.UserAccount;
 import com.paymybuddy.moneytransferapp.repository.ContactRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.TestPropertySource;
 
 import java.util.ArrayList;
@@ -28,6 +30,9 @@ public class ContactServiceTest {
 
     @Mock
     private UserAccountService userAccountServiceMock;
+
+    @Mock
+    private PMBUtils pmbUtilsMock;
 
     @InjectMocks
     private ContactServiceImpl contactService;
@@ -72,5 +77,15 @@ public class ContactServiceTest {
 
         verify(contactRepositoryMock, Mockito.times(0)).save(any());
         assertThat(resultContact).isNull();
+    }
+
+    @Test
+    public void getContactAsPageTest(){
+        Pageable pageable = PageRequest.of(0,1);
+        Page<Contact> expectedPage = new PageImpl<>(contactList, pageable, contactList.size());
+        when((Page<Contact>)pmbUtilsMock.transformListIntoPage(pageable,contactList)).thenReturn(expectedPage);
+        Page<Contact> resultPage = contactService.getContactsAsPage(PageRequest.of(0, 1),contactList);
+
+        assertThat(resultPage).isEqualTo(expectedPage);
     }
 }

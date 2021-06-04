@@ -3,6 +3,7 @@ package com.paymybuddy.moneytransferapp.service;
 import com.paymybuddy.moneytransferapp.constants.FeeRate;
 import com.paymybuddy.moneytransferapp.exceptions.PMBTransactionException;
 import com.paymybuddy.moneytransferapp.model.BankAccount;
+import com.paymybuddy.moneytransferapp.model.Contact;
 import com.paymybuddy.moneytransferapp.model.Transaction;
 import com.paymybuddy.moneytransferapp.model.UserAccount;
 import com.paymybuddy.moneytransferapp.model.dto.TransactionDTO;
@@ -15,6 +16,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -39,12 +44,16 @@ public class TransactionServiceTest {
     @Mock
     private BankAccountRepository bankAccountRepositoryMock;
 
+    @Mock
+    private PMBUtils pmbUtilsMock;
+
     @InjectMocks
     private TransactionServiceImpl transactionService;
 
     private Transaction existingTransaction = new Transaction();
     private UserAccount sender = new UserAccount();
     private UserAccount beneficiary = new UserAccount();
+    private List<Transaction> transactionList = new ArrayList<>();
     private BankAccount bankAccount = new BankAccount();
     private List<BankAccount> bankAccountList = new ArrayList<>();
 
@@ -63,7 +72,7 @@ public class TransactionServiceTest {
         existingTransaction.setBeneficiary(beneficiary);
         existingTransaction.setDescription("test");
         existingTransaction.setAmount(10);
-        List<Transaction> transactionList = new ArrayList<>();
+
         transactionList.add(existingTransaction);
 
         sender.setTransactionListAsSender(transactionList);
@@ -280,5 +289,15 @@ public class TransactionServiceTest {
         assertThat(exception.getMessage()).contains("Update on beneficiary UserAccount error");
 
         verify(transactionRepositoryMock,Mockito.times(0)).save(any(Transaction.class));
+    }
+
+    @Test
+    public void getTransactionsAsPageTest(){
+        Pageable pageable = PageRequest.of(0,1);
+        Page<Transaction> expectedPage = new PageImpl<>(transactionList, pageable, transactionList.size());
+        when((Page<Transaction>)pmbUtilsMock.transformListIntoPage(pageable,transactionList)).thenReturn(expectedPage);
+        Page<Transaction> resultPage = transactionService.getTransactionsAsPage(PageRequest.of(0, 1),transactionList);
+
+        assertThat(resultPage).isEqualTo(expectedPage);
     }
 }

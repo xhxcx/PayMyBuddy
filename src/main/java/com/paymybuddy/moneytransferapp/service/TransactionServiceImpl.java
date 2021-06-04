@@ -11,12 +11,15 @@ import com.paymybuddy.moneytransferapp.repository.BankAccountRepository;
 import com.paymybuddy.moneytransferapp.repository.TransactionRepository;
 import com.paymybuddy.moneytransferapp.repository.UserAccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -30,6 +33,9 @@ public class TransactionServiceImpl implements TransactionService{
 
     @Autowired
     private BankAccountRepository bankAccountRepository;
+
+    @Autowired
+    private PMBUtils pmbUtils;
 
     @Transactional
     @Override
@@ -117,5 +123,25 @@ public class TransactionServiceImpl implements TransactionService{
                 break;
         }
         return transactionAmountForSender;
+    }
+
+    @Override
+    public Page<Transaction> getTransactionsAsPage(Pageable pageable, List<Transaction> transactionList){
+        //TODO ok comme pratique ? avec methode statique ?
+        /*int pageSize = pageable.getPageSize();
+        int currentPage = pageable.getPageNumber();
+        int pageFirstItem = currentPage * pageSize;
+        List<Transaction> list;
+
+        if (transactionList == null || transactionList.size() < pageFirstItem) {
+            list = Collections.emptyList();
+        }
+        else{
+            int toIndex = Math.min(pageFirstItem + pageSize,transactionList.size());
+            list = transactionList.subList(pageFirstItem, toIndex);
+        }
+
+        return new PageImpl<>(list, PageRequest.of(currentPage, pageSize), (transactionList !=null) ? transactionList.size() : 0);*/
+        return (Page<Transaction>) pmbUtils.transformListIntoPage(pageable, transactionList);
     }
 }
