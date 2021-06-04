@@ -1,17 +1,41 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
     <head>
-        <meta charset="ISO-8859-1">
+        <meta charset="UTF-8">
         <title>PayMyBuddy</title>
-        <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css" />
-        <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
-        <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+        <link href="../static/css/bootstrap.min.css" rel="stylesheet" media="screen" th:href="@{/css/bootstrap.min.css}"/>
+        <link href="../static/css/pmb.css" rel="stylesheet" media="screen" th:href="@{/css/pmb.css}"/>
+        <script type="text/javascript" src="../static/js/bootstrap.min.js" th:href="@{/js/bootstrap.min.js}"></script>
+
     </head>
     <body>
-        <div class="container text-center">
-            <h1>PayMyBuddy</h1>
-            <h3><a th:href="@{/login}">Login</a> </h3>
-            <h3><a th:href="@{/register}">Register</a></h3>
+        <div class="container">
+            <header class="d-flex flex-wrap justify-content-center py-3" th:replace="/fragments/header :: header"></header>
+
+            <div class="p-5 mb-4 bg-light rounded-3">
+                <div class="container-fluid py-5">
+                    <h1 class="display-5 fw-bold">PayMyBuddy</h1>
+                    <p class="col-md-8 fs-4">PayMyBuddy is a service that allows you to make secured money transfers to your friends. You can recharge your PMB account directly with an IBAN and withdraw from your account to your bank account.</p>
+                    <a th:href="@{/register}"><button class="btn pmb-theme btn-lg" type="button">Register</button></a>
+                </div>
+            </div>
+
+            <div class="row align-items-md-stretch">
+                <div class="col-md-6">
+                    <div class="h-100 p-5 text-white pmb-theme rounded-3">
+                        <h2>Some marketing content</h2>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                        <button class="btn btn-outline-light" type="button">Page link</button>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="h-100 p-5 bg-light border rounded-3">
+                        <h2>Another content</h2>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                        <button class="btn btn-outline-secondary" type="button">Another button</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </body>
 </html>

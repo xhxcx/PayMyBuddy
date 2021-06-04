@@ -1,50 +1,53 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="ISO-8859-1">
-    <title>PayMyBuddy - Add bank account</title>
-    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css" />
-    <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
-    <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
-</head>
-<body>
-<div class="container text-center">
-    <div>
-        <h1>Add a new bank account</h1>
-    </div>
-    <form th:action="@{/addBankAccount}"
-          method="post" style="max-width: 600px; margin: 0 auto;">
-        <div class="m-3">
-            <div class="form-group row">
-                <label class="col-4 col-form-label">RIB name : </label>
-                <div class="col-8">
-                    <input type="text" th:name="caption" class="form-control" maxlength="50" />
-                </div>
-            </div>
+    <head>
+        <meta charset="utf-8">
+        <title>Add bank account</title>
+        <link href="../static/css/bootstrap.min.css" rel="stylesheet" media="screen" th:href="@{/css/bootstrap.min.css}"/>
+        <link href="../static/css/pmb.css" rel="stylesheet" media="screen" th:href="@{/css/pmb.css}"/>
+        <script type="text/javascript" src="../static/js/bootstrap.min.js" th:href="@{/js/bootstrap.min.js}"></script>
+    </head>
+    <body>
+        <div class="container">
+            <header class="d-flex flex-wrap justify-content-center py-3" th:replace="/fragments/header :: header"></header>
+            <nav aria-label="breadcrumb" th:replace="/fragments/header :: breadcrumb"></nav>
 
-            <div class="form-group row">
-                <label class="col-4 col-form-label">IBAN : </label>
-                <div class="col-8">
-                    <input type="text" th:name="iban" class="form-control"
-                           required minlength="27" maxlength="27"/>
+            <div class="container text-center">
+                <div>
+                    <h1>Add a new bank account</h1>
                 </div>
-            </div>
-            <div class="form-group row">
-                <label class="col-4 col-form-label">Holder name : </label>
-                <div class="col-8">
-                    <input type="text" th:name="holderName" class="form-control"
-                           required minlength="3" maxlength="120"/>
+                <div>
+                    <span class="error" th:text="${bankAccountError}"></span>
                 </div>
-            </div>
-            <input th:type="hidden" id="user" name="user" th:value="${currentUser.id}" class="form-control" readonly>
-            <div>
-                <button type="submit" class="btn btn-primary">Add bank account</button>
-            </div>
-            <div>
-                <span class="error" style="color: red" th:text="${bankAccountError}"></span>
+
+                <form th:action="@{/addBankAccount}"
+                      method="post" style="max-width: 600px; margin: 0 auto;">
+                    <div class="row mb-3">
+                        <label for="ibanCaption" class="col-sm-2 col-form-label">RIB name</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="ibanCaption" th:name="caption" class="form-control" maxlength="50" />
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="iban" class="col-sm-2 col-form-label">IBAN</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="iban" th:name="iban" class="form-control"
+                                   required minlength="27" maxlength="27"/>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="ibanHolderName" class="col-sm-2 col-form-label">Holder name</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="ibanHolderName" th:name="holderName" class="form-control"
+                                   required minlength="3" maxlength="120"/>
+                        </div>
+                    </div>
+                    <input th:type="hidden" id="user" name="user" th:value="${currentUser.id}" class="form-control" readonly>
+                    <div>
+                        <button type="submit" class="btn pmb-theme">Add bank account</button>
+                    </div>
+                </form>
             </div>
         </div>
-    </form>
-</div>
-</body>
+    </body>
 </html>

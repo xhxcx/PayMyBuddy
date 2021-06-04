@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>PayMyBuddy</title>
+        <link href="../../static/css/bootstrap.min.css" rel="stylesheet" media="screen" th:href="@{/css/bootstrap.min.css}"/>
+        <script type="text/javascript" src="../../static/js/bootstrap.min.js" th:href="@{/js/bootstrap.min.js}"></script>
+
+    </head>
+    <body>
+        <div class="container">
+            <!-- ============================================================================ -->
+            <!-- Header fragment                                                              -->
+            <!-- Contains brand logo and nav                                                  -->
+            <!-- ============================================================================ -->
+            <header class="d-flex flex-wrap justify-content-center py-1" th:fragment="header">
+                <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+                    <img width="200px" height="60px" th:src="@{~/assets/pmb-logo.svg}" alt="PayMyBuddy" />
+                </a>
+                <ul class="nav nav-pills align-content-center fs-5">
+                    <li class="nav-item"><a href="#" th:class="${activePage == 'dashboard'} ? 'nav-link active' : 'nav-link'" th:href="@{/dashboard}">Home</a></li>
+                    <li class="nav-item"><a href="#" th:class="${activePage == 'transfer'} ? 'nav-link active' : 'nav-link'" th:href="@{/transfer}">Transfer</a></li>
+                    <li class="nav-item"><a href="#" th:class="${activePage == 'bankAccount'} ? 'nav-link active' : 'nav-link'" th:href="@{/bankAccount}">Account Management</a></li>
+                    <li class="nav-item" th:if="${currentUser == null}">
+                        <a href="/signin" class="nav-link" th:href="@{/login}">
+                            <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span> Login
+                        </a>
+                    </li>
+                    <li class="nav-item" th:if="${currentUser != null}">
+                        <a href="/logout" class="nav-link" th:href="@{/logout}" onclick="$('#form').submit();">
+                            <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>&nbsp;Logout
+                        </a>
+                        <form id="logoutForm" method="post" th:action="@{/logout}"></form>
+                    </li>
+                </ul>
+            </header>
+
+            <!-- ============================================================================ -->
+            <!-- Breadcrumb fragment                                                          -->
+            <!-- ============================================================================ -->
+            <nav aria-label="breadcrumb" class="bg-light p-2 fs-5 align-content-center" th:fragment="breadcrumb">
+                <ol class="breadcrumb mb-2 ps-4">
+                    <li class="breadcrumb-item"><a href="#" th:href="@{/dashboard}">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page"><span th:text="${currentPage}"></span></li>
+                </ol>
+            </nav>
+
+            <!-- ============================================================================ -->
+            <!-- Welcome fragment                                                             -->
+            <!-- Contains welcome text and account balance                                    -->
+            <!-- ============================================================================ -->
+            <div class="container mb-5" th:fragment="welcome">
+                <div class="row">
+                    <div class="col-sm-8"><h1 class="display-5">Welcome back <span class="pmb-text" th:text="${currentUser.firstName} + ' ' + ${currentUser.lastName}"></span></h1></div>
+                    <div class="col-sm-4 text-align-end"><p class="fs-4"><span th:text="'Account balance : ' + ${currentUser.accountBalance}"></span></p></div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
