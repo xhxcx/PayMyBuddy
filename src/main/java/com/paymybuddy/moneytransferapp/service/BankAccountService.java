@@ -12,7 +12,4 @@ public interface BankAccountService {
     List<BankAccount> getBankAccountsByUser(UserAccount user);
 
     BankAccount addNewBankAccount(BankAccount bankAccount);
-
-    BankAccount editBankAccount(int bankAccountId, BankAccount updatedBankAccount);
-
 }

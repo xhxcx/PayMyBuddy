@@ -10,8 +10,6 @@ public interface UserAccountService {
 
     UserAccount createUser(UserAccount newUser);
 
-    UserAccount updateUser(UserAccount userToUpdate);
-
     List<UserAccount> getAllUsers();
 
     UserAccount findUserByEmail(String email);

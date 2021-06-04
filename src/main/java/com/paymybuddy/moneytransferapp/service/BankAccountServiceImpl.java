@@ -33,9 +33,4 @@ public class BankAccountServiceImpl implements BankAccountService{
         }
         return bankAccountRepository.save(bankAccount);
     }
-
-    @Override
-    public BankAccount editBankAccount(int bankAccountId, BankAccount updatedBankAccount) {
-        return null;
-    }
 }

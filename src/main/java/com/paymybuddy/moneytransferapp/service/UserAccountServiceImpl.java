@@ -27,17 +27,6 @@ public class UserAccountServiceImpl implements UserAccountService{
     }
 
     @Override
-    public UserAccount updateUser(UserAccount userToUpdate) {
-        if(userToUpdate != null){
-            if(userRepository.findUserAccountByEmail(userToUpdate.getEmail()) != null){
-                userRepository.save(userToUpdate);
-                return userToUpdate;
-            }
-        }
-        return null;
-    }
-
-    @Override
     public List<UserAccount> getAllUsers() {
         return userRepository.findAll();
     }
