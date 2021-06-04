@@ -2,64 +2,87 @@
 <html xmlns:th="http://www.thymeleaf.org">
     <head>
         <meta charset="utf-8">
-        <title>List Users</title>
-        <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css" />
-        <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
-        <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+        <title>My transactions</title>
+        <link href="../static/css/bootstrap.min.css" rel="stylesheet" media="screen" th:href="@{/css/bootstrap.min.css}"/>
+        <link href="../static/css/pmb.css" rel="stylesheet" media="screen" th:href="@{/css/pmb.css}"/>
+        <script type="text/javascript" src="../static/js/bootstrap.min.js" th:href="@{/js/bootstrap.min.js}"></script>
     </head>
     <body>
-        <div class="container text-center">
-            <div>
-                <form th:action="@{/logout}" method="post">
-                    <input type="submit" value="Sign Out" />
-                </form>
+        <div class="container">
+            <header class="d-flex flex-wrap justify-content-center py-3" th:replace="/fragments/header :: header"></header>
+            <nav aria-label="breadcrumb" th:replace="/fragments/header :: breadcrumb"></nav>
+            <div class="container" th:replace="/fragments/header :: welcome"></div>
+
+            <div class="container mb-2">
+                <div class="row">
+                    <div class="col align-self-center"><p class="h4">Send Money</p></div>
+                    <div class="col text-align-end"><form id="addContact" method="get" action="#" th:action="@{/addContact}"><button class="btn btn-primary btn-lg" type="submit">Add contact</button></form></div>
+                </div>
             </div>
-            <div>
-                <h1><span th:text="'Welcome on your PayMyBuddy ' + ${currentUser.firstName} + ' ' + ${currentUser.lastName}"></span></h1>
-                <h2><span th:text="'Account balance : ' + ${currentUser.accountBalance}"></span></h2>
-            </div>
-            <div>
-                <h2>Send money</h2>
-                <form th:action="@{/transfer}" th:object="${transactionDTO}"
-                      method="post" style="max-width: 600px; margin: 0 auto;">
-                    <div class="m-3">
-                        <div class="form-group row">
-                            <div class="col-8">
-                                <select th:field="*{beneficiary}" class="form-select" required>
-                                    <option th:value="0" disabled th:selected="selected" th:text="'Select a connection'"></option>
-                                    <option th:each="contact : ${contactList}" th:value="${contact.contactUser.id}" th:text="${contact.alias}"></option>
-                                </select>
-                                <input type="text" th:field="*{amount}" th:placeholder="0+' ?'" class="form-control" required />
+            <div class="p-3 mb-4 bg-light rounded-3">
+                <div class="container-fluid py-5">
+                    <form class="row row-cols-lg-auto g-3 align-items-center justify-content-center" th:action="@{/transfer}" th:object="${transactionDTO}"
+                          method="post">
+                        <div class="col-12">
+                            <label class="visually-hidden" for="beneficiarySelector">Beneficiary</label>
+                            <select th:field="*{beneficiary}" class="form-select" id="beneficiarySelector" required>
+                                <option th:value="0" disabled th:selected="selected" th:text="'Select a connection'"></option>
+                                <option th:each="contact : ${contactList}" th:value="${contact.contactUser.id}" th:text="${contact.alias}"></option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <div class="input-group">
+                                <input type="number" th:field="*{amount}" th:placeholder="0" class="form-control" required step="0.01" min="1" max="1000"/>
+                                <div class="input-group-text">€</div>
                                 <span th:text="${amountMessage}"></span>
-
-
-                                <input type="text" th:field="*{description}" placeholder="Description" class="form-control" required minlength="2" />
-                                <input th:type="hidden" id="sender" name="sender" th:value="${currentUser.id}" class="form-control" readonly>
-                                <input th:type="hidden" id="transactionType" name="transactionType" th:value="'CONTACT_TRANSFER_PAYMENT'" class="form-control" readonly>
-                                <button type="submit" class="btn btn-primary">Pay</button>
                             </div>
                         </div>
-                    </div>
-                </form>
+                        <div class="col-12">
+                            <div class="input-group">
+                                <input type="text" th:field="*{description}" placeholder="Description" class="form-control" required minlength="2" />
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <input th:type="hidden" id="sender" name="sender" th:value="${currentUser.id}" class="form-control" readonly>
+                            <input th:type="hidden" id="transactionType" name="transactionType" th:value="'CONTACT_TRANSFER_PAYMENT'" class="form-control" readonly>
+                            <button type="submit" class="btn pmb-theme px-5">Pay</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-
-            <h2>My transactions</h2>
-            <table class="table table-striped table-bordered">
-                <thead class="thead-dark">
-                <tr>
-                    <th>Connections</th>
+            <div class="col align-self-center"><p class="h4">My transactions</p></div>
+            <table class="table table-striped table-borderless pmb-table text-center">
+                <thead class="pmb-theme">
+                <tr class="py-3">
+                    <th>Recipient</th>
                     <th>Description</th>
                     <th>Amount</th>
                 </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="transaction : ${transactionList}">
+                    <tr class="py-3" th:each="transaction : ${transactionPage.content}">
                         <td th:text="${transaction.beneficiary.firstName}"></td>
                         <td th:text="${transaction.description}"></td>
                         <td th:text="${transaction.amount} + '€'"></td>
                     </tr>
                 </tbody>
             </table>
+            <nav th:if="${transactionPage.totalPages > 1}" aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    <li th:class="${transactionPage.number > 0} ? 'page-item' : 'page-item disabled'">
+                        <a aria-label="Previous" class="page-link"
+                           th:href="@{/transactionList(page=${transactionPage.number})}">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li th:each="pageNumber : ${pageNumbers}" th:class="${pageNumber==transactionPage.number+1} ? 'active page-item' : 'page-item'"><a class="page-link" th:href="@{/transactionList(page=${pageNumber})}" th:text="${pageNumber}"></a></li>
+                    <li th:class="${transactionPage.number < transactionPage.totalPages -1} ? 'page-item' : 'page-item disabled'">
+                        <a class="page-link" th:href="@{/transactionList(page=${transactionPage.number + 2})}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
         </div>
     </body>
 </html>

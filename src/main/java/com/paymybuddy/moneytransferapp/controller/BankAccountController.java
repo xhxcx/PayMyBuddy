@@ -1,12 +1,10 @@
 package com.paymybuddy.moneytransferapp.controller;
 
-import com.paymybuddy.moneytransferapp.model.BankAccount;
 import com.paymybuddy.moneytransferapp.model.UserAccount;
 import com.paymybuddy.moneytransferapp.model.dto.BankAccountDTO;
 import com.paymybuddy.moneytransferapp.model.dto.BankAccountDtoMapper;
 import com.paymybuddy.moneytransferapp.model.dto.TransactionDTO;
 import com.paymybuddy.moneytransferapp.service.BankAccountService;
-import com.paymybuddy.moneytransferapp.service.UserAccountService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +14,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+
 
 import javax.validation.Valid;
 
@@ -33,6 +31,8 @@ public class BankAccountController {
     public String goToBankAccountsForCurrentUser(Model model){
         UserAccount currentUser = getCurrentUserAsEntity(model);
         model.addAttribute("transactionDTO", new TransactionDTO());
+        model.addAttribute("activePage", "bankAccount");
+        model.addAttribute("currentPage", "Account Management");
         if (currentUser == null) {
             logger.info("Unknown current user, redirect to homepage");
             return "index";
@@ -41,31 +41,26 @@ public class BankAccountController {
         return "bank_account";
     }
 
-    @GetMapping("addBankAccount")
+    @GetMapping("/addBankAccount")
     public String showAddBankAccountForm(Model model){
         model.addAttribute("newBankAccount", new BankAccountDTO());
+        model.addAttribute("currentPage", "Account Management / Add Account");
         if (model.getAttribute("currentUser") == null)
             return "redirect:dashboard";
         return "add_bank_account";
     }
 
-    @PostMapping("addBankAccount")
+    @PostMapping("/addBankAccount")
     public String addBankAccount(@Valid @ModelAttribute("newBankAccount")BankAccountDTO bankAccountDTO, BindingResult result, Model model){
         if(result.hasErrors()){
-            System.out.println(result.getFieldErrors());
-            model.addAttribute("bankAccountError", "Bank account informations are not ok to save");
-            return "add_bank_account";
+            if(result.hasFieldErrors("caption") || result.hasFieldErrors("iban") || result.hasFieldErrors("holderName")) {
+                model.addAttribute("bankAccountError", "Bank account informations are not ok to save");
+                return "add_bank_account";
+            }
         }
         else {
             bankAccountService.addNewBankAccount(BankAccountDtoMapper.INSTANCE.DTOToEntity(bankAccountDTO));
         }
-    /*public String addBankAccount(@RequestParam String caption,@RequestParam String iban, @RequestParam String holderName, Model model){
-        BankAccount bankAccountToAdd = new BankAccount();
-        bankAccountToAdd.setCaption(caption);
-        bankAccountToAdd.setIban(iban);
-        bankAccountToAdd.setHolderName(holderName);
-        bankAccountToAdd.setUser(getCurrentUserAsEntity(model));
-        bankAccountService.addNewBankAccount(bankAccountToAdd);*/
         return "redirect:/bankAccount";
     }
 

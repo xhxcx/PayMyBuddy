@@ -1,7 +1,7 @@
 package com.paymybuddy.moneytransferapp.controller;
 
+import com.paymybuddy.moneytransferapp.model.Contact;
 import com.paymybuddy.moneytransferapp.model.UserAccount;
-import com.paymybuddy.moneytransferapp.model.dto.UserDTO;
 import com.paymybuddy.moneytransferapp.service.ContactService;
 import com.paymybuddy.moneytransferapp.service.UserAccountService;
 import org.junit.jupiter.api.BeforeAll;
@@ -10,11 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +44,10 @@ public class UserAccountControllerTest {
 
     private static UserAccount user;
     private static List<UserAccount> userList;
+    private static UserAccount contactUser;
+    private static Contact contact =new Contact();
+    private static List<Contact> contactList = new ArrayList<>();
+    private static Page<Contact> contactPage;
 
     @BeforeAll
     public static void setUp(){
@@ -51,7 +59,26 @@ public class UserAccountControllerTest {
         user.setAddress("25 rue du nord, 59000 Lille");
         user.setPassword(new BCryptPasswordEncoder().encode("motdepasse"));
 
+        contactUser = new UserAccount();
+        contactUser.setEmail("contact.user@test.com");
+        contactUser.setFirstName("contact");
+        contactUser.setLastName("user");
+        contactUser.setAddress("contact address");
+        contactUser.setPassword(new BCryptPasswordEncoder().encode("motdepasse"));
+
         userList.add(user);
+        userList.add(contactUser);
+
+
+
+        contact.setUser(user);
+        contact.setContactUser(contactUser);
+        contact.setAlias("contact");
+        contactList.add(contact);
+
+        user.setContactList(contactList);
+
+        contactPage = new PageImpl<>(contactList, PageRequest.of(1, 1), contactList.size());
 
     }
 
@@ -60,6 +87,17 @@ public class UserAccountControllerTest {
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("index"));
+    }
+    @Test
+    @WithMockUser(username = "user.test",password = "mdpTest")
+    public void viewHomeAlreadyLoggedTest() throws Exception {
+        when(userAccountServiceMock.findUserByEmail(anyString())).thenReturn(user);
+        when(contactServiceMock.getContactsAsPage(any(),eq(contactList))).thenReturn(contactPage);
+        mockMvc.perform(get("/"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("dashboard"))
+                .andExpect(model().attribute("currentUser", user))
+                .andExpect(model().attributeExists("contactPage"));
     }
 
     @Test
@@ -118,12 +156,36 @@ public class UserAccountControllerTest {
     @Test
     @WithMockUser(username = "user.test",password = "mdpTest")
     public void goToLoggedDashboardTest() throws Exception {
-       // when(contactServiceMock.getAllContactsForUser(anyString())).thenReturn(null);
         when(userAccountServiceMock.findUserByEmail(anyString())).thenReturn(user);
+        when(contactServiceMock.getContactsAsPage(any(),eq(contactList))).thenReturn(contactPage);
         mockMvc.perform(get("/dashboard"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("dashboard"))
                 .andExpect(model().attributeExists("currentUser"))
-                .andExpect(model().attribute("currentUser",user));
+                .andExpect(model().attribute("currentUser",user))
+                .andExpect(model().attribute("contactPage", contactPage));
+    }
+
+    @Test
+    public void showLoginTest() throws Exception {
+        mockMvc.perform(get("/login"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeDoesNotExist("currentUser"));
+    }
+
+    @Test
+    @WithMockUser(username = "user.test",password = "mdpTest")
+    public void getContactPageTest() throws Exception {
+        when(userAccountServiceMock.findUserByEmail(anyString())).thenReturn(user);
+        when(contactServiceMock.getContactsAsPage(any(),eq(contactList))).thenReturn(contactPage);
+        mockMvc.perform(get("/contactList")
+        .param("page", String.valueOf(1))
+        .param("size", String.valueOf(1)))
+                .andExpect(status().isOk())
+                .andExpect(view().name("dashboard"))
+                .andExpect(model().attributeExists("currentUser"))
+                .andExpect(model().attribute("currentUser",user))
+                .andExpect(model().attributeExists("pageNumbers"))
+                .andExpect(model().attribute("contactPage", contactPage));
     }
 }

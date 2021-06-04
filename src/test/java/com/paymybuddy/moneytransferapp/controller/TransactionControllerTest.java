@@ -12,6 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -20,6 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.paymybuddy.moneytransferapp.model.TransactionType.CONTACT_TRANSFER_PAYMENT;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -41,6 +47,7 @@ public class TransactionControllerTest {
 
     private final UserAccount currentUser = new UserAccount();
     private final List<Transaction> transactionList = new ArrayList<>();
+    private Page<Transaction> transactionPage;
 
     @BeforeEach
     public void setUp(){
@@ -59,6 +66,7 @@ public class TransactionControllerTest {
 
         transactionList.add(existingTransaction);
         currentUser.setTransactionListAsSender(transactionList);
+        transactionPage = new PageImpl<>(transactionList, PageRequest.of(1, 1), transactionList.size());
 
     }
 
@@ -66,11 +74,13 @@ public class TransactionControllerTest {
     @WithMockUser(username = "tyler.durden@gmail.com",password = "mdpTest")
     public void goToTransferDashboardTest() throws Exception {
         when(userAccountServiceMock.findUserByEmail("tyler.durden@gmail.com")).thenReturn(currentUser);
+        when(transactionServiceMock.getTransactionsAsPage(any(),eq(transactionList))).thenReturn(transactionPage);
         mockMvc.perform(get("/transfer"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("transfer"))
                 .andExpect(model().attributeExists("transactionDTO"))
-                .andExpect(model().attribute("currentUser", currentUser));
+                .andExpect(model().attribute("currentUser", currentUser))
+                .andExpect(model().attribute("transactionPage", transactionPage));
     }
 
     @Test
@@ -100,6 +110,7 @@ public class TransactionControllerTest {
 
         when(transactionServiceMock.prepareNewTransaction(transactionDTO)).thenReturn(transaction);
         when(transactionServiceMock.processTransaction(transaction)).thenReturn(transaction);
+        when(transactionServiceMock.getTransactionsAsPage(any(),eq(transactionList))).thenReturn(transactionPage);
 
         mockMvc.perform(post("/transfer")
                 .flashAttr("transactionDTO", transactionDTO)
@@ -126,6 +137,7 @@ public class TransactionControllerTest {
         transactionDTO.setTransactionType(CONTACT_TRANSFER_PAYMENT);
 
         when(userAccountServiceMock.findUserByEmail("tyler.durden@gmail.com")).thenReturn(currentUser);
+        when(transactionServiceMock.getTransactionsAsPage(any(),eq(transactionList))).thenReturn(transactionPage);
 
         mockMvc.perform(post("/transfer")
                 .flashAttr("transactionDTO", transactionDTO)
@@ -160,6 +172,7 @@ public class TransactionControllerTest {
         transactionDTO.setTransactionType(CONTACT_TRANSFER_PAYMENT);
 
         when(userAccountServiceMock.findUserByEmail("tyler.durden@gmail.com")).thenReturn(currentUser);
+        when(transactionServiceMock.getTransactionsAsPage(any(),eq(transactionList))).thenReturn(transactionPage);
 
         when(transactionServiceMock.prepareNewTransaction(transactionDTO)).thenReturn(transaction);
         when(transactionServiceMock.processTransaction(transaction)).thenThrow(PMBTransactionException.class);
@@ -171,5 +184,20 @@ public class TransactionControllerTest {
                 .andExpect(view().name("transfer"))
                 .andExpect(model().attribute("currentUser", currentUser))
         .andExpect(model().attribute("amountMessage", "Your sold is not sufficient for this transaction amount"));
+    }
+
+    @Test
+    @WithMockUser(username = "tyler.durden@gmail.com",password = "mdpTest")
+    public void getTransactionPageTest() throws Exception {
+        when(userAccountServiceMock.findUserByEmail("tyler.durden@gmail.com")).thenReturn(currentUser);
+        when(transactionServiceMock.getTransactionsAsPage(any(),eq(transactionList))).thenReturn(transactionPage);
+        mockMvc.perform(get("/transactionList")
+        .param("page", String.valueOf(1))
+        .param("size", String.valueOf(1)))
+                .andExpect(status().isOk())
+                .andExpect(view().name("transfer"))
+                .andExpect(model().attributeExists("transactionDTO"))
+                .andExpect(model().attribute("currentUser", currentUser))
+                .andExpect(model().attribute("transactionPage", transactionPage));
     }
 }
