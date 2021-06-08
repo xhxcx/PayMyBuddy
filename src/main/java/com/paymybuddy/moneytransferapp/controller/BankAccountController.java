@@ -55,11 +55,13 @@ public class BankAccountController {
         if(result.hasErrors()){
             if(result.hasFieldErrors("caption") || result.hasFieldErrors("iban") || result.hasFieldErrors("holderName")) {
                 model.addAttribute("bankAccountError", "Bank account informations are not ok to save");
+                logger.debug("Error trying to add new bank account");
                 return "add_bank_account";
             }
         }
         else {
             bankAccountService.addNewBankAccount(BankAccountDtoMapper.INSTANCE.DTOToEntity(bankAccountDTO));
+            logger.info("New bank account added");
         }
         return "redirect:/bankAccount";
     }

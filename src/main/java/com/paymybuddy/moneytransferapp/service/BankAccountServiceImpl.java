@@ -15,10 +15,14 @@ import java.util.List;
 @Transactional
 public class BankAccountServiceImpl implements BankAccountService{
 
-    @Autowired
-    private BankAccountRepository bankAccountRepository;
+    private final BankAccountRepository bankAccountRepository;
 
     private static final Logger logger = LogManager.getLogger(BankAccountService.class);
+
+    @Autowired
+    public BankAccountServiceImpl(BankAccountRepository bankAccountRepository) {
+        this.bankAccountRepository = bankAccountRepository;
+    }
 
     @Override
     public List<BankAccount> getBankAccountsByUser(UserAccount user) {

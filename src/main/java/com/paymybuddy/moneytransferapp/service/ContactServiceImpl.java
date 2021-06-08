@@ -15,14 +15,18 @@ import java.util.List;
 @Transactional
 public class ContactServiceImpl implements ContactService{
 
-    @Autowired
-    private ContactRepository contactRepository;
+    private final ContactRepository contactRepository;
+
+    private final UserAccountService userAccountService;
+
+    private final PMBUtils pmbUtils;
 
     @Autowired
-    private UserAccountService userAccountService;
-
-    @Autowired
-    private PMBUtils pmbUtils;
+    public ContactServiceImpl(ContactRepository contactRepository, UserAccountService userAccountService, PMBUtils pmbUtils) {
+        this.contactRepository = contactRepository;
+        this.userAccountService = userAccountService;
+        this.pmbUtils = pmbUtils;
+    }
 
 
     @Override

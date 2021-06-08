@@ -56,6 +56,7 @@ public class UserAccountController {
     @GetMapping("/register")
     public String showRegistrationForm(Model model) {
         model.addAttribute("user", new UserDTO());
+        logger.info("Show register form");
         return "register";
     }
 
@@ -63,6 +64,7 @@ public class UserAccountController {
     public String validateUserRegistration(@Valid @ModelAttribute("user") UserDTO user, BindingResult bindingResult, Model model){
         model.addAttribute("user", user);
         if(bindingResult.hasErrors()){
+            logger.debug("Register has errors on " + bindingResult.getAllErrors());
             if(bindingResult.hasFieldErrors("email"))
                 model.addAttribute("emailMessage", "Email already exists as a user");
             return "register";
@@ -72,6 +74,7 @@ public class UserAccountController {
             String encodedPassword = passwordEncoder.encode(user.getPassword());
             user.setPassword(encodedPassword);
             userAccountService.createUser(UserDtoMapper.INSTANCE.userDtoToUser(user));
+            logger.info("New user registered : " + user.getEmail());
         }
         return "register_success";
     }
@@ -82,6 +85,7 @@ public class UserAccountController {
         model.addAttribute("currentPage", "Dashboard");
         if(principal != null) {
             paginationUpdate(model,1,3);
+            logger.info("Show dashboard");
         }
         return "dashboard";
     }
@@ -89,6 +93,7 @@ public class UserAccountController {
     @GetMapping("/contactList")
     private String getContactPage(Model model, @RequestParam(required = false, defaultValue = "1") int page, @RequestParam(required = false, defaultValue = "3") int size){
         paginationUpdate(model, page, size);
+        logger.info("Get contact page " + page);
         return "dashboard";
     }
 

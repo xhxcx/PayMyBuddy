@@ -22,20 +22,26 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+// TODO JAVADOC
+
 @Service
 public class TransactionServiceImpl implements TransactionService{
 
-    @Autowired
-    private TransactionRepository transactionRepository;
+    private final TransactionRepository transactionRepository;
+
+    private final UserAccountRepository userAccountRepository;
+
+    private final BankAccountRepository bankAccountRepository;
+
+    private final PMBUtils pmbUtils;
 
     @Autowired
-    private UserAccountRepository userAccountRepository;
-
-    @Autowired
-    private BankAccountRepository bankAccountRepository;
-
-    @Autowired
-    private PMBUtils pmbUtils;
+    public TransactionServiceImpl(BankAccountRepository bankAccountRepository, UserAccountRepository userAccountRepository, TransactionRepository transactionRepository, PMBUtils utils) {
+        this.bankAccountRepository = bankAccountRepository;
+        this.transactionRepository = transactionRepository;
+        this.userAccountRepository = userAccountRepository;
+        this.pmbUtils = utils;
+    }
 
     @Transactional
     @Override
@@ -127,21 +133,6 @@ public class TransactionServiceImpl implements TransactionService{
 
     @Override
     public Page<Transaction> getTransactionsAsPage(Pageable pageable, List<Transaction> transactionList){
-        //TODO ok comme pratique ? avec methode statique ?
-        /*int pageSize = pageable.getPageSize();
-        int currentPage = pageable.getPageNumber();
-        int pageFirstItem = currentPage * pageSize;
-        List<Transaction> list;
-
-        if (transactionList == null || transactionList.size() < pageFirstItem) {
-            list = Collections.emptyList();
-        }
-        else{
-            int toIndex = Math.min(pageFirstItem + pageSize,transactionList.size());
-            list = transactionList.subList(pageFirstItem, toIndex);
-        }
-
-        return new PageImpl<>(list, PageRequest.of(currentPage, pageSize), (transactionList !=null) ? transactionList.size() : 0);*/
         return (Page<Transaction>) pmbUtils.transformListIntoPage(pageable, transactionList);
     }
 }

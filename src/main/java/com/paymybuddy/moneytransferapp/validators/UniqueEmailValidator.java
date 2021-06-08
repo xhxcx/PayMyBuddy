@@ -13,13 +13,10 @@ public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail, St
 
 
     @Override
-    public void initialize(UniqueEmail uniqueEmail) {
-        System.out.println("Validation in progress");
-    }
+    public void initialize(UniqueEmail uniqueEmail) { }
 
     @Override
     public boolean isValid(String email, ConstraintValidatorContext constraintValidatorContext) {
-        //TODO null pointer sur mon repository au save()
         return userAccountRepository.findUserAccountByEmail(email) == null;
     }
 }

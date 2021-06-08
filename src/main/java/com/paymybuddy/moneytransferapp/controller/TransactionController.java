@@ -27,7 +27,7 @@ public class TransactionController {
     @Autowired
     private TransactionService transactionService;
 
-    private static final Logger logger = LogManager.getLogger(UserAccountController.class);
+    private static final Logger logger = LogManager.getLogger(TransactionController.class);
 
     @GetMapping(path = "/transfer")
     private String goToTransferDashboard(Model model){
@@ -35,6 +35,7 @@ public class TransactionController {
         model.addAttribute("activePage", "transfer");
         model.addAttribute("currentPage", "Transfer");
         this.paginationUpdate(model, 1,3);
+        logger.info("Show transfer page");
         return "transfer";
     }
 
@@ -43,6 +44,7 @@ public class TransactionController {
         model.addAttribute("transactionDTO", transactionDTO);
         paginationUpdate(model, 1,3);
         if(bindingResult.hasErrors()){
+            logger.debug("Transaction validation has errors on " + bindingResult.getAllErrors());
             if(bindingResult.hasFieldErrors("amount")) {
                 model.addAttribute("amountMessage", "Amount should be superior to 1 and with 2 decimal");
             }
@@ -50,12 +52,12 @@ public class TransactionController {
         }
         else {
             Transaction transaction = transactionService.prepareNewTransaction(transactionDTO);
-            logger.info("New transaction : " + transaction);
             try {
                 transactionService.processTransaction(transaction);
+                logger.info("New transaction : " + transaction);
             } catch (PMBTransactionException e) {
-                //TODO affiner le message en fonction du message de l'exception levée
                 e.printStackTrace();
+                logger.debug("Error processing transaction");
                 model.addAttribute("amountMessage", "Your sold is not sufficient for this transaction amount");
                 return (transactionDTO.getTransactionType().equals(TransactionType.CONTACT_TRANSFER_PAYMENT)) ? "transfer" : "bank_account";
             }
@@ -67,6 +69,7 @@ public class TransactionController {
     private String getTransactionPage(Model model, @RequestParam(required = false, defaultValue = "1") int page, @RequestParam(required = false, defaultValue = "3") int size){
         model.addAttribute("transactionDTO", new TransactionDTO());
         paginationUpdate(model, page, size);
+        logger.info("Get transaction page " + page);
         return "transfer";
     }
 
