@@ -22,8 +22,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-// TODO JAVADOC
-
 @Service
 public class TransactionServiceImpl implements TransactionService{
 
@@ -67,7 +65,7 @@ public class TransactionServiceImpl implements TransactionService{
 
         double amountForSender = calculateTransactionAmountForSender(transaction.getAmount(), transaction.getTransactionType());
         if(!sender.isPresent())
-            return null;
+            throw new PMBTransactionException("Sender not found in database");
 
         double newUserBalance = sender.get().getAccountBalance().doubleValue();
 
@@ -115,6 +113,13 @@ public class TransactionServiceImpl implements TransactionService{
         return transactionRepository.save(transaction);
     }
 
+    /**
+     * Calculate the transaction amount for the sender regarding the TransactionType to apply the correct fee rate
+     *
+     * @param amount double amount that the sender want to transfer
+     * @param transactionType TransactionType of the transfer
+     * @return double the amount for the sender after fee rate application
+     */
     private double calculateTransactionAmountForSender(double amount, TransactionType transactionType){
         double transactionAmountForSender = amount;
         switch (transactionType){

@@ -8,6 +8,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+/**
+ * Implementation to use users from database to log in the app
+ */
 public class UserAccountUserDetailsService implements UserDetailsService {
 
     @Autowired
