@@ -26,7 +26,7 @@
                           method="post">
                         <div class="col-12">
                             <select th:field="*{transactionType}" class="form-select" required>
-                                <option th:value="0" disabled th:selected="selected" th:text="'Select operation'"></option>
+                                <option th:value="0" th:selected="selected" th:text="'Select operation'"></option>
                                 <option th:each="transactionType : ${transactionTypes}" th:value="${transactionType.name}" th:text="${transactionType.value}"></option>
                             </select>
                         </div>

@@ -26,7 +26,7 @@
                         <div class="col-12">
                             <label class="visually-hidden" for="beneficiarySelector">Beneficiary</label>
                             <select th:field="*{beneficiary}" class="form-select" id="beneficiarySelector" required>
-                                <option th:value="0" disabled th:selected="selected" th:text="'Select a connection'"></option>
+                                <option selected="selected" value="0">Select a connection</option>
                                 <option th:each="contact : ${contactList}" th:value="${contact.contactUser.id}" th:text="${contact.alias}"></option>
                             </select>
                         </div>

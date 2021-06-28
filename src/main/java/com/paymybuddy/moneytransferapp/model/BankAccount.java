@@ -1,11 +1,13 @@
 package com.paymybuddy.moneytransferapp.model;
 
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 
 @Data
 @Entity
+@ToString(of = {"caption", "holderName", "user"})
 @Table(name="bank_account")
 public class BankAccount {
 

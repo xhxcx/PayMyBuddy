@@ -9,9 +9,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 
 import java.security.Principal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
 
 @ControllerAdvice
 public class MyControllerAdvice {

@@ -3,7 +3,6 @@ package com.paymybuddy.moneytransferapp.service;
 import com.paymybuddy.moneytransferapp.constants.FeeRate;
 import com.paymybuddy.moneytransferapp.exceptions.PMBTransactionException;
 import com.paymybuddy.moneytransferapp.model.BankAccount;
-import com.paymybuddy.moneytransferapp.model.Contact;
 import com.paymybuddy.moneytransferapp.model.Transaction;
 import com.paymybuddy.moneytransferapp.model.UserAccount;
 import com.paymybuddy.moneytransferapp.model.dto.TransactionDTO;
@@ -153,14 +152,14 @@ public class TransactionServiceTest {
     }
 
     @Test
-    public void processTransactionForContactPaymentErrorSenderUnknownTest() throws PMBTransactionException {
+    public void processTransactionForContactPaymentErrorSenderUnknownTest() {
         Transaction transactionWithoutSender = new Transaction();
         transactionWithoutSender.setSender(new UserAccount());
         transactionWithoutSender.setTransactionType(CONTACT_TRANSFER_PAYMENT);
         transactionWithoutSender.setAmount(10);
 
-        Transaction resultTransaction =  transactionService.processTransaction(transactionWithoutSender);
-        assertThat(resultTransaction).isNull();
+        Exception exception = assertThrows(PMBTransactionException.class, () -> transactionService.processTransaction(transactionWithoutSender));
+        assertThat(exception.getMessage()).contains("Sender not found in database");
     }
 
     @Test

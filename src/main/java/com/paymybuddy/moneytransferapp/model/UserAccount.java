@@ -40,12 +40,12 @@ public class UserAccount {
     @Column(name="account_balance")
     private BigDecimal accountBalance = BigDecimal.ZERO;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.DETACH)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
     private List<Contact> contactList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "sender", cascade = CascadeType.DETACH)
+    @OneToMany(mappedBy = "sender", fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
     private List<Transaction> transactionListAsSender = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.DETACH)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
     private List<BankAccount> bankAccountList = new ArrayList<>();
 }

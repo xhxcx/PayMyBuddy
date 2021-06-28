@@ -94,4 +94,31 @@ public class BankAccountControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/bankAccount"));
     }
+
+    @Test
+    @WithMockUser(username = "tyler.durden@gmail.com", password = "mdpTest")
+    public void addBankAccountWithErrorTest() throws Exception {
+        UserAccount user = new UserAccount();
+        user.setId(1);
+        BankAccount bankAccount = new BankAccount();
+        bankAccount.setId(1);
+        bankAccount.setUser(user);
+        bankAccount.setIban("ibanTest");
+        bankAccount.setHolderName("holderNameTest");
+        bankAccount.setCaption("captionTest");
+
+        BankAccountDTO bankAccountDTO = new BankAccountDTO();
+        bankAccountDTO.setId(1);
+        bankAccountDTO.setUser(user);
+        bankAccountDTO.setHolderName("holderNameTest");
+        bankAccountDTO.setCaption("captionTest");
+        when(bankAccountServiceMock.addNewBankAccount(any(BankAccount.class))).thenReturn(bankAccount);
+
+        mockMvc.perform(post("/addBankAccount")
+                .flashAttr("newBankAccount",bankAccountDTO)
+                .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("add_bank_account"))
+                .andExpect(model().attributeExists("bankAccountError"));
+    }
 }

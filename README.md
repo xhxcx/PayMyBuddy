@@ -8,9 +8,6 @@ We can also make withdrawals and deposit between our bank account and PayMyBuddy
 #### Physical Data Model
 ![Physical Data Model](src/main/resources/static/physical_data_model.png)
 
-## Getting started
-
-To be completed
 
 ### Pre-requisites
 
@@ -20,8 +17,15 @@ To be completed
 
 ### Install
 
-To be completed
+Create a MySQL database named paymybuddy
+Run `src/java/resources/static/DDL.sql` to create tables
+
+Run `mvn clean install`
 
 ## Running
 
-To be completed
+Run `mvn spring-boot:run` to launch the application
+
+Go to http://localhost:8080/
+
+Run `mvn spring-boot:stop` to stop the application

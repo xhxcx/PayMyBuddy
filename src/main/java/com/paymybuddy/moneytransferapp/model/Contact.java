@@ -1,6 +1,5 @@
 package com.paymybuddy.moneytransferapp.model;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
